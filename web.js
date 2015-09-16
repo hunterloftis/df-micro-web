@@ -20,7 +20,8 @@ function app() {
     .set('views', __dirname)
     .set('view cache', true)
     .get('/products/:productId', createProduct, collectProduct(EXPIRATION), showProduct)
-    .get('/', redirect);
+    .get('/', redirect)
+    .use(errorPage);
 
   function redirect(req, res) {
     res.redirect('/products/1');
@@ -68,9 +69,13 @@ function app() {
     });
   }
 
-  function showProduct(req, res) {
+  function showProduct(req, res, next) {
     var p = res.locals.product
     if (p.name && p.price) res.render('product');
-    else res.render('product-fail');
+    else return next(new Error('minimum data not available'));
+  }
+
+  function errorPage(err, req, res, next) {
+    res.status(500).render('fail');
   }
 }
