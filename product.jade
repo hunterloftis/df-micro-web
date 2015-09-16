@@ -46,13 +46,16 @@ html(lang='en')
       .plenty {
         color: #393;
       }
-
+      
+      .Rating-count, .Product-description {
+        font-size: 16px;
+      }
   body        
     section.Product
       img.Product-image(src=product.image)
       header
         h1 #{ product.name }
-        if (product.reviews)
+        if (product.reviews && product.reviews.count > 0)
           figure.Rating
             span.Rating-stars
               - var n = product.reviews.averageRating
