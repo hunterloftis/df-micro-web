@@ -5,7 +5,7 @@ var parallel = require('express-parallel');
 var _ = require('lodash');
 
 var PORT = process.env.PORT || 3000;
-var RENDER_TIMEOUT = process.env.RENDER_TIMEOUT || 1000;
+var EXPIRATION = process.env.EXPIRATION || 1000;
 
 var rabbit = jackrabbit(process.env.CLOUDAMQP_URL);
 var exchange = rabbit.default();
@@ -19,7 +19,7 @@ function app() {
     .set('view engine', 'jade')
     .set('views', __dirname)
     .set('view cache', true)
-    .get('/products/:productId', createProduct, collectProduct(RENDER_TIMEOUT), showProduct)
+    .get('/products/:productId', createProduct, collectProduct(EXPIRATION), showProduct)
     .get('/', redirect);
 
   function redirect(req, res) {
@@ -37,6 +37,7 @@ function app() {
 
   function getProduct(req, res, next) {
     exchange.publish({ id: req.params.productId }, {
+      expiration: EXPIRATION,
       key: 'product.get',
       reply: function(data) {
         _.extend(res.locals.product, data);
@@ -47,6 +48,7 @@ function app() {
 
   function getInventory(req, res, next) {
     exchange.publish({ id: req.params.productId }, {
+      expiration: EXPIRATION,
       key: 'inventory.get',
       reply: function(data) {
         _.extend(res.locals.product, data);
@@ -57,6 +59,7 @@ function app() {
 
   function getReviews(req, res, next) {
     exchange.publish({ id: req.params.productId }, {
+      expiration: EXPIRATION,
       key: 'reviews.get',
       reply: function(data) {
         _.extend(res.locals.product, { reviews: data });
