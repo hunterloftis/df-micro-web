@@ -2,6 +2,51 @@ doctype html
 html(lang='en')
   head
     title #{ product.name } at Shopper
+    style.
+      body {
+        font-family: helvetica, arial, sans-serif;
+        font-size: 20px;
+        font-weight: 200;
+      }
+      
+      .Product {
+        width: 1000px;
+        margin: 20px auto;
+      }
+      
+      .Product > article {
+        border-top: solid 1px #ccc;
+      }
+      
+      .Product > header {
+        padding-top: 20px;
+      }
+      
+      .Product-image {
+        width: 40%;
+        float: left;
+        clear: left;
+      }
+      
+      .Rating-star {
+        font-weight: 900;
+        margin-right: 5px;
+        color: #fc0;
+      }
+      
+      .Product-price > span {
+        color: #900;
+        font-weight: 700;
+      }
+      
+      .Product-stock {
+        font-weight: 500;
+      }
+      
+      .plenty {
+        color: #393;
+      }
+
   body        
     section.Product
       img.Product-image(src=product.image)
@@ -15,14 +60,11 @@ html(lang='en')
                 span.Rating-star +
             span.Rating-count  (from #{ product.reviews.count } reviews)
       article
-        p.Product-price Price: $#{ product.price }
+        p.Product-price Price:
+          span  $#{ product.price }
         if (product.hasOwnProperty('inventory'))
-          p.Product-stock #{ product.inventory } in stock
+          if (product.inventory > 5)
+            p.Product-stock.plenty #{ product.inventory } in stock
+          else
+            p.Product-stock.scarce Only #{ product.inventory } in stock
         p.Product-description #{ product.description }
-    section.Related
-      header
-        h2 Customers Who Viewed This Item Also Viewed
-        if product.related
-          nav.Related-products
-            for p in product.related
-              img.Related-image(src=p.image)
