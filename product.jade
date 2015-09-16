@@ -7,17 +7,22 @@ html(lang='en')
       img.Product-image(src=product.image)
       header
         h1 #{ product.name }
-        figure.Rating
-          - var n = 4
-          while n--
-            .Star
+        if (product.reviews)
+          figure.Rating
+            span.Rating-stars
+              - var n = product.reviews.averageRating
+              while (n-- > 0)
+                span.Rating-star +
+            span.Rating-count  (from #{ product.reviews.count } reviews)
       article
         p.Product-price Price: $#{ product.price }
-        p.Product-stock #{ product.numAvailable } in stock
+        if (product.hasOwnProperty('inventory'))
+          p.Product-stock #{ product.inventory } in stock
         p.Product-description #{ product.description }
     section.Related
       header
         h2 Customers Who Viewed This Item Also Viewed
-        nav.Related-products
-          for product in relatedProducts
-            img.Related-image(src=product.image)
+        if product.related
+          nav.Related-products
+            for p in product.related
+              img.Related-image(src=p.image)
