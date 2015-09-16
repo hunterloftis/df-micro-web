@@ -8,7 +8,7 @@ var PORT = process.env.PORT || 3000;
 var RENDER_TIMEOUT = process.env.RENDER_TIMEOUT || 1000;
 
 var rabbit = jackrabbit(process.env.CLOUDAMQP_URL);
-var topicExchange = rabbit.topic();
+var exchange = rabbit.default();
 
 app().listen(PORT, function() {
   console.log('Listening on port', PORT);
@@ -36,7 +36,7 @@ function app() {
   }
 
   function getProduct(req, res, next) {
-    topicExchange.publish({ id: req.params.productId }, {
+    exchange.publish({ id: req.params.productId }, {
       key: 'product.get',
       reply: function(data) {
         _.extend(res.locals.product, data);
@@ -46,7 +46,7 @@ function app() {
   }
 
   function getInventory(req, res, next) {
-    topicExchange.publish({ id: req.params.productId }, {
+    exchange.publish({ id: req.params.productId }, {
       key: 'inventory.get',
       reply: function(data) {
         _.extend(res.locals.product, data);
@@ -56,7 +56,7 @@ function app() {
   }
 
   function getReviews(req, res, next) {
-    topicExchange.publish({ id: req.params.productId }, {
+    exchange.publish({ id: req.params.productId }, {
       key: 'reviews.get',
       reply: function(data) {
         _.extend(res.locals.product, { reviews: data });
