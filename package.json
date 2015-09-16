@@ -4,7 +4,8 @@
   "description": "",
   "main": "web.js",
   "scripts": {
-    "dev": "nodemon -e 'jade' web.js"
+    "dev": "nodemon -e 'jade' web.js",
+    "start": "node web.js"
   },
   "author": "",
   "license": "ISC",
