@@ -1,7 +1,7 @@
 var http = require('http');
 var express = require('express');
 var jackrabbit = require('jackrabbit');
-var parallel = require('./express-parallel');
+var parallel = require('express-parallel');
 var _ = require('lodash');
 
 var PORT = process.env.PORT || 3000;
