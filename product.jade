@@ -1,0 +1,23 @@
+doctype html
+html(lang='en')
+  head
+    title #{ product.name } at Shopper
+  body        
+    section.Product
+      img.Product-image(src=product.image)
+      header
+        h1 #{ product.name }
+        figure.Rating
+          - var n = 4
+          while n--
+            .Star
+      article
+        p.Product-price Price: $#{ product.price }
+        p.Product-stock #{ product.numAvailable } in stock
+        p.Product-description #{ product.description }
+    section.Related
+      header
+        h2 Customers Who Viewed This Item Also Viewed
+        nav.Related-products
+          for product in relatedProducts
+            img.Related-image(src=product.image)
